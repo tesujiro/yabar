@@ -28,14 +28,14 @@ simple demo
         [ ! `$case.cat.stderr` ]; $case.check
     }
     yabarun
-1.source yabar.sh
-2.make test function named "test_*"
-3.yabarun
-4.create case with "yabar_create_case"
-5.initialize the case
-6.set a title of the case with $case.is function
-7.run command with $case.run
-8.chek the result with $case.check
+1.source yabar.sh  
+2.make test function named "test_*"  
+3.yabarun  
+4.create case with "yabar_create_case"  
+5.initialize the case  
+6.set a title of the case with $case.is function  
+7.run command with $case.run  
+8.chek the result with $case.check  
 
 ## Install
 
