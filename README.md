@@ -1,4 +1,3 @@
-#yabar
 Yabar: Yet Another BAsh scripts Runner.
 ====
 
