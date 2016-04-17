@@ -292,7 +292,9 @@ yabar_main()
   shift `expr $OPTIND - 1`
 
   if [ $# -eq 0 ];then
-    local TEST_FUNCS=`declare -F |awk '{print $3}' |grep ^test_ `
+    shopt -s extdebug
+    local TEST_FUNCS=$(declare -F $(declare -F |awk '{print $3}' |grep ^test_)|sort -nk2|awk '{print $1}') 
+    shopt -u extdebug
   else
     # TODO: add function name matching
     local TEST_FUNCS="$*"
