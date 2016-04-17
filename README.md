@@ -37,7 +37,32 @@ simple demo
 7.run command with $case.run  
 8.chek the result with $case.check  
 
+    !/bin/bash
+    . ../lib/yabar.sh
+    test_02()
+    {
+        local TEMP=/tmp/aaa.txt
+        echo xxx >>$TEMP
+        date >>$TEMP
+    
+        local case=`yabar_create_case`; yabar_case_init $case
+        $case.is "正常系：既存ファイル追加出力 echoコマンド"
+        $case.start.trace $TEMP
+        $case.run "echo aaa >>$TEMP"
+    
+        [ `$case.cat.trace $TEMP |grep "aaa" |wc -l ` -gt 0 ]
+        $case.check "File output contains echo string"
+        [ `$case.cat.trace $TEMP |grep "xxx" |wc -l ` -eq 0 ]
+        $case.check "File output does not contain init string"
+        rm $TEMP
+    }
+    yabarun
+
+1.start trace file with $case.start.trace
+2.output trace file with $case.cat.trace
+
 ## Install
+No installation, download yabar.sh
 
 ## Contribution
 
