@@ -20,9 +20,9 @@ A simple testing framework for bash scripts.
 
 ## Licence
 
-[MIT](https://github.com/tcnksm/tool/blob/master/LICENCE)
+[MIT]
 
 ## Author
 
-[tcnksm](https://github.com/tcnksm)
+[tesujiro](https://github.com/tesujiro)
 
