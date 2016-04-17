@@ -18,18 +18,21 @@ test_normal_01()
 {
     local case=`yabar_create_case`; yabar_case_init $case
     $case.is "正常系：標準出力 echoコマンド"
-    $case.execute "echo aaa"
+    $case.execute 'echo "aaa    bbb"'
 
-    [ $? -ne 0 ]
+    [ $? -eq 0 ]
     $case.check 
     #$case.check "Return Code is Normal"
 
-    [ `$case.cat.stdout |grep "aaa" |wc -l ` -ge 0 ]
+    [ `$case.cat.stdout |grep "aaa" |wc -l ` -eq 1 ]
+    $case.check
+    #$case.check "Standard Output is Normal"
+    [ `$case.cat.stdout |grep 'aaa    bbb' |wc -l ` -eq 1 ]
     $case.check
     #$case.check "Standard Output is Normal"
 
 
-    [ `$case.cat.stderr |wc -l ` -ne 0 ]
+    [ `$case.cat.stderr |wc -l ` -eq 0 ]
     $case.check
     #$case.check "Standard Error is Normal"
 }
@@ -49,7 +52,7 @@ test_normal_02()
     [ `$case.cat.stdout |grep "aaa" |wc -l ` -eq 0 ]
     $case.check "Standard Output"
 
-    [ `$case.cat.stderr |wc -l ` -eq 0 ]
+    [[ ! `$case.cat.stderr` ]]
     $case.check "Standard Error"
 
     [ `$case.cat.trace $TEMP |grep "aaa" |wc -l ` -gt 0 ]

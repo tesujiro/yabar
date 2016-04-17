@@ -28,7 +28,7 @@ yabar_debug()
   if [ ${#YABAR_COMMAND_BUFFER[@]} -gt $YABAR_COMMAND_BUFFER_LENGTH ];then
     YABAR_COMMAND_BUFFER=("${YABAR_COMMAND_BUFFER[@]:1}")
   fi
-  YABAR_PREV_COMMAND=${YABAR_COMMAND_BUFFER[1]}
+  YABAR_PREV_COMMAND="${YABAR_COMMAND_BUFFER[1]}"
 }
 set -T
 trap yabar_debug DEBUG
@@ -100,7 +100,7 @@ $case.execute(){ yabar_execute $case_no "\$@" ; }
 $case.cat.stdout(){ yabar_cat_stdout $case_no "\$@" ; }
 $case.cat.stderr(){ yabar_cat_stderr $case_no "\$@" ; }
 $case.cat.trace(){ yabar_cat_trace $case_no "\$@" ; }
-$case.check(){ yabar_check $case_no "\$@" ; }
+$case.check(){ yabar_check $case_no \$@ ; }
 EOF
 }
 
@@ -111,9 +111,9 @@ yabar_case_init()
   YABAR_CASE_NAME+=($case_name)
   YABAR_CASE_INSPECTION[$YABAR_CURRENT_CASE]=0
   YABAR_CASE_FUNCTION[$YABAR_CURRENT_CASE]=${FUNCNAME[1]}
-  YABAR_TRACE_FILE=()
-  YABAR_TRACE_START_TIME=()
-  YABAR_TRACE_START_LINE=()
+  YABAR_TRACE_FILE=()    #needed ??
+  YABAR_TRACE_START_TIME=()    #needed ??
+  YABAR_TRACE_START_LINE=()    #needed ??
   eval "`yabar_case_function $case_name $YABAR_CURRENT_CASE`"
 }
 
@@ -154,13 +154,12 @@ yabar_execute()
   local stdout=`yabar_case_stdout $case_no`
   local stderr=`yabar_case_stderr $case_no`
   yabar_case_mkdir $case_no
-  yabar_echo command : $command
+  yabar_echo command : "$command"
   yabar_echo "start  :" `date`
   #TODO: time
   trap - DEBUG
   trap 'sed -i -e "s|${BASH_SOURCE[1]}|${BASH_SOURCE[2]}|" -e "s|$LINENO|${BASH_LINENO[1]}|" $stderr ' ERR
-  #trap 'echo LINENO=$LINENO ;echo BASH_LINENO=${BASH_LINENO[@]}' ERR
-  eval $command >$stdout 2>$stderr
+  eval "$command" >$stdout 2>$stderr
   exit=$?
   yabar_echo Return Code: $exit
   trap - ERR
@@ -211,19 +210,19 @@ yabar_check()
 {
   local result=$?
   local case_no=$1
-  local prev_command=$YABAR_PREV_COMMAND
+  local prev_command="$YABAR_PREV_COMMAND"
   [[ $# -ne 1 ]] && local title="${@:2}" || local title="$prev_command"
 
   ((YABAR_CASE_INSPECTION[$case_no]++))
   local insp_no=${YABAR_CASE_INSPECTION[$case_no]}
 
   local insp_index=$case_no"_"$insp_no
-  YABAR_INSP_TITLE[$insp_index]=$title
+  YABAR_INSP_TITLE[$insp_index]="$title"
   [ $result -eq 0 ] && YABAR_INSP_RESULT[$insp_index]="OK" || YABAR_INSP_RESULT[$insp_index]="NG"
   local INSP_TITLE_LENGTH=`echo -n ${YABAR_INSP_TITLE[$insp_index]}|iconv -f UTF-8 -t SJIS|wc -c`
   local DOTS=`printf '.%.0s' $(seq 1 $((50 - $INSP_TITLE_LENGTH)))`
   #local DOTS=`printf '.%.0s' $(seq 1 $((50 - ${#YABAR_INSP_TITLE[$insp_index]})))`
-  yabar_echo `printf "%2.2d-%2.2d." $case_no $insp_no `${YABAR_INSP_TITLE[$insp_index]}  $DOTS ${YABAR_INSP_RESULT[$insp_index]} \
+  yabar_echo `printf "%2.2d-%2.2d." $case_no $insp_no `"${YABAR_INSP_TITLE[$insp_index]}"  $DOTS ${YABAR_INSP_RESULT[$insp_index]} \
     | yabar_paint_${YABAR_INSP_RESULT[$insp_index]}
 }
 
