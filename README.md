@@ -58,8 +58,8 @@ simple demo
     }
     yabarun
 
-1.start trace file with $case.start.trace
-2.output trace file with $case.cat.trace
+1.start trace file with $case.start.trace  
+2.output trace file with $case.cat.trace  
 
 ## Install
 No installation, download yabar.sh
