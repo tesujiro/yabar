@@ -18,23 +18,18 @@ test_normal_01()
 {
     local case=`yabar_create_case`; yabar_case_init $case
     $case.is "正常系：標準出力 echoコマンド"
-    $case.execute 'echo "aaa    bbb"'
+    $case.run 'echo "aaa    bbb"'
 
     [ $? -eq 0 ]
     $case.check 
-    #$case.check "Return Code is Normal"
 
     [ `$case.cat.stdout |grep "aaa" |wc -l ` -eq 1 ]
     $case.check
-    #$case.check "Standard Output is Normal"
     [ `$case.cat.stdout |grep 'aaa    bbb' |wc -l ` -eq 1 ]
     $case.check
-    #$case.check "Standard Output is Normal"
-
 
     [ `$case.cat.stderr |wc -l ` -eq 0 ]
     $case.check
-    #$case.check "Standard Error is Normal"
 }
 
 test_normal_02()
@@ -44,12 +39,12 @@ test_normal_02()
     local TEMP=/tmp/aaa.txt
     $case.start.trace $TEMP
 
-    $case.execute "echo aaa >$TEMP"
+    $case.run "echo aaa >$TEMP"
 
     [ $? -eq 0 ]
     $case.check "Return Code"
 
-    [ `$case.cat.stdout |grep "aaa" |wc -l ` -eq 0 ]
+    [ ! `$case.cat.stdout |grep "aaa"` ]
     $case.check "Standard Output"
 
     [[ ! `$case.cat.stderr` ]]
@@ -70,7 +65,7 @@ test_normal_03()
     date >>$TEMP
     $case.start.trace $TEMP
 
-    $case.execute "echo aaa >>$TEMP"
+    $case.run "echo aaa >>$TEMP"
 
     [ $? -eq 0 ]
     $case.check "Return Code"
@@ -98,9 +93,9 @@ test_normal_04()
     local TEMPFILE=/tmp/aaa.txt
     $case.start.trace $TEMP
 
-    $case.execute "echo aaa >>$TEMPFILE"
+    $case.run "echo aaa >>$TEMPFILE"
 
-    [ $? -ne 0 ]
+    [ $? -eq 0 ]
     $case.check "Return Code"
 
     [ `$case.cat.stdout |grep "aaa" |wc -l ` -eq 0 ]
@@ -125,7 +120,7 @@ test_normal_05()
     echo xxx >>$TEMPFILE
     $case.start.trace $TEMP
 
-    $case.execute "echo aaa >>$TEMPFILE"
+    $case.run "echo aaa >>$TEMPFILE"
 
     [ $? -eq 0 ]
     $case.check "Return Code"
@@ -146,7 +141,7 @@ test_error_01()
 {
     local case=`yabar_create_case`; yabar_case_init $case
     $case.is "異常系：標準エラー出力 Command not found"
-    $case.execute "aaa aaa"
+    $case.run "aaa aaa"
 
     [ $? -ne 0 ]
     $case.check "リターン値がゼロでない"
@@ -159,6 +154,5 @@ test_error_01()
 
 }
 
-#yabar_main "$@"
-yabar_run
+yabarun
 

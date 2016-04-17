@@ -18,7 +18,7 @@ declare -A YABAR_INSP_TITLE        # Key: CaseNum"_"InspctionNum
 declare -A YABAR_INSP_RESULT       # Key: CaseNum"_"InspctionNum
 
 shopt -s expand_aliases
-alias yabar_run='yabar_main "$@"'
+alias yabarun='yabar_main "$@"'
 
 YABAR_COMMAND_BUFFER_LENGTH=9
 YABAR_COMMAND_BUFFER=()
@@ -97,6 +97,7 @@ yabar_case_function()
 $case.is(){ yabar_case_is $case_no "\$@"; }
 $case.start.trace(){ yabar_start_trace $case_no "\$@" ; }
 $case.execute(){ yabar_execute $case_no "\$@" ; }
+$case.run(){ yabar_run $case_no "\$@" ; }
 $case.cat.stdout(){ yabar_cat_stdout $case_no "\$@" ; }
 $case.cat.stderr(){ yabar_cat_stderr $case_no "\$@" ; }
 $case.cat.trace(){ yabar_cat_trace $case_no "\$@" ; }
@@ -156,14 +157,11 @@ yabar_execute()
   yabar_case_mkdir $case_no
   yabar_echo command : "$command"
   yabar_echo "start  :" `date`
-  #TODO: time
-  trap - DEBUG
   trap 'sed -i -e "s|${BASH_SOURCE[1]}|${BASH_SOURCE[2]}|" -e "s|$LINENO|${BASH_LINENO[1]}|" $stderr ' ERR
   eval "$command" >$stdout 2>$stderr
-  exit=$?
-  yabar_echo Return Code: $exit
+  local rc=$?
+  yabar_echo Return Code: $rc
   trap - ERR
-  trap yabar_debug DEBUG
   yabar_echo Standard Out:
   [ ! -z $stdout ] && yabar_cat $stdout
   yabar_echo Standard Error:
@@ -172,8 +170,16 @@ yabar_execute()
     yabar_echo TRACE $file:
     yabar_cat_trace $file | yabar_cat
   done
-  yabar_echo "finish :" `date`
-  return $exit
+  return $rc
+}
+
+yabar_run()
+{
+  trap - DEBUG
+  (time yabar_execute "$@") 2>&1 | awk 'NF' |yabar_cat 
+  local rc=${PIPESTATUS[0]}
+  trap yabar_debug DEBUG
+  return $rc
 }
 
 yabar_cat_stdout()

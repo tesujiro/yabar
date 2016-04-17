@@ -20,5 +20,5 @@ test_scenario_01()
     [ ! `$case2.cat.stderr` ]; $case2.check
 }
 
-yabar_run 
+yabarun 
 
