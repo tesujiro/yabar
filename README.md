@@ -46,7 +46,7 @@ simple demo
         date >>$TEMP
     
         local case=`yabar_create_case`; yabar_case_init $case
-        $case.is "正常系：既存ファイル追加出力 echoコマンド"
+        $case.is "Append string to file"
         $case.start.trace $TEMP
         $case.run "echo aaa >>$TEMP"
     
