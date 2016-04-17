@@ -16,8 +16,8 @@ simple demo
 ## Requirement
 
 ## Usage
+    #!/bin/bash
     . ../lib/yabar.sh
-    
     test_01()
     {
         local case=`yabar_create_case`; yabar_case_init $case
@@ -27,7 +27,6 @@ simple demo
         [ `$case.cat.stdout |grep "^aaa$" ` ]; $case.check
         [ ! `$case.cat.stderr` ]; $case.check
     }
-    
     yabarun
 
 ## Install
