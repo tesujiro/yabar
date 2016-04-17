@@ -6,7 +6,8 @@ A simple testing framework for bash scripts.
 ## Description
 
 ## Demo
-![Simple Demo](https://raw.githubusercontent.com/tesujiro/yabar/master/img/yabar_demo_simple.gif)
+![Demo](https://raw.githubusercontent.com/tesujiro/yabar/master/img/yabar_demo.gif):demo
+![Simple Demo](https://raw.githubusercontent.com/tesujiro/yabar/master/img/yabar_demo_simple.gif):simple_demo
 
 ## VS. 
 
