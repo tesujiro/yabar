@@ -9,12 +9,12 @@ test_scenario_01()
     $case1.is "the sender case."
     $case2.is "the receiver case."
 
-    $case1.execute "echo aaa"
+    $case1.run "echo aaa"
     [ $? -eq 0 ]; $case1.check 
     [ `$case1.cat.stdout |grep "^aaa$" ` ]; $case1.check
     [ ! `$case1.cat.stderr` ]; $case1.check
 
-    $case2.execute "echo bbb"
+    $case2.run "echo bbb"
     [ $? -eq 0 ]; $case2.check 
     [ `$case2.cat.stdout |grep "^bbb$" ` ]; $case2.check
     [ ! `$case2.cat.stderr` ]; $case2.check
