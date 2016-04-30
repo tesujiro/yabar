@@ -157,7 +157,8 @@ yabar_execute()
   yabar_case_mkdir $case_no
   yabar_echo command : "$command"
   yabar_echo "start  :" `date`
-  trap 'sed -i -e "s|${BASH_SOURCE[1]}|${BASH_SOURCE[2]}|" -e "s|$LINENO|${BASH_LINENO[1]}|" $stderr ' ERR
+  # change source name and error line of error message
+  trap 'sed -i -e "s|${BASH_SOURCE[1]}|${BASH_SOURCE[3]}|" -e "s|$LINENO|${BASH_LINENO[2]}|" $stderr ' ERR
   eval "$command" >$stdout 2>$stderr
   local rc=$?
   yabar_echo Return Code: $rc
